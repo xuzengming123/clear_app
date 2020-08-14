@@ -53,16 +53,26 @@ class RunExcel(unittest.TestCase):
                     commom_header = ath.add_to_header(json.loads(add_header_value))
                     res = BaseRequest.run_main(method, url, header=commom_header)
                     code_stutas = res['code']
-                    message = res['message']
-                    if result_method == 'mec':
-                        excel_message = ExpectationResultMoed.get_excel_message(ExpectationResult,url,code_stutas)
-                        if message == excel_message:
-                            excel_data.excel_wirte_data(i+2,12,str(res))
-                            excel_data.excel_wirte_data(i + 2, 13, 'pass')
-                        else:
-                            excel_data.excel_wirte_data(i+2,12,str(res))
-                            excel_data.excel_wirte_data(i + 2, 12, 'fail')
-
+                    if res['msg'] != '请求成功':
+                        msg = res['msg']
+                        if result_method == 'mec':
+                            excel_message = ExpectationResultMoed.get_excel_message(ExpectationResult,url,code_stutas)
+                            if msg == excel_message:
+                                excel_data.excel_wirte_data(i+2,12,str(res))
+                                excel_data.excel_wirte_data(i + 2, 13, 'pass')
+                            else:
+                                excel_data.excel_wirte_data(i+2,12,str(res))
+                                excel_data.excel_wirte_data(i + 2, 13, 'fail')
+                    else:
+                        message = res['message']
+                        if result_method == 'mec':
+                            excel_message = ExpectationResultMoed.get_excel_message(ExpectationResult,url,code_stutas)
+                            if message == excel_message:
+                                excel_data.excel_wirte_data(i+2,12,str(res))
+                                excel_data.excel_wirte_data(i + 2, 13, 'pass')
+                            else:
+                                excel_data.excel_wirte_data(i+2,12,str(res))
+                                excel_data.excel_wirte_data(i + 2, 13, 'fail')
 
 
 
