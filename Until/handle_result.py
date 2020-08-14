@@ -2,9 +2,11 @@ import os,sys,json
 
 class ExpectationResultMoed:
     @classmethod
-    def get_excel_message(cls,message_data,url,code):
+    def get_excel_message(cls,message_data,url,code_status):
         '''
         从Excel文件中获取code对应的message信息
+        :param url:
+        :param code_status:
         :param message_data:
         :param key:
         :param code:
@@ -12,13 +14,15 @@ class ExpectationResultMoed:
         '''
         message_data = json.loads(message_data)
         message_list = message_data.get(url)
-        if message_list != None:
+        if message_list is not None:
             for i in message_list:
-                mes = i.get(str(code))
+                mes = i.get(str(code_status))
                 if mes:
                     return mes
         return None
 
+
+    @classmethod
     def get_result_from_excel(cls,messageData,url,status):
         '''
         从excel中获取预期结果。
