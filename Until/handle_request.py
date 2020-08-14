@@ -3,7 +3,7 @@ import os,json
 import urllib3
 from Until.handle_ini import handle_init
 from Config.header import headers
-from Until.handle_header import ahv
+from Until.handle_header import ath
 
 class BaseRequest:
     @classmethod
@@ -44,6 +44,6 @@ class BaseRequest:
 if __name__ == '__main__':
 
     header = headers
-    header1 = ahv.add_to_header('xzm','asd')
+    header1 = ath.add_to_header('xzm','asd')
     res = BaseRequest.run_main('post','/guaGuaActivity/getAwardDesc',header=header1)
     print(res)
