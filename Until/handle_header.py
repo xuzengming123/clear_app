@@ -15,7 +15,7 @@ class HandleHeader:
 追加到header里面'''
 
 
-ahv = HandleHeader()
+ath = HandleHeader()
 if __name__ == '__main__':
     headers = {'xxx':'bbb','ccc':'ddd'}
-    print(ahv.add_to_header(headers))
+    print(ath.add_to_header(headers))
