@@ -10,6 +10,7 @@ from Until.handle_ini import handle_init
 from Until.handle_common import common
 from Until.handle_request import *
 from Config.header import *
+from Until.handle_header import ath
 from Config.url_path import *
 from Until.handle_log import log
 from Until.handle_result import ExpectationResultMoed
@@ -32,6 +33,7 @@ class RunExcel(unittest.TestCase):
                 url = data[3]
                 method = data[4]
                 commom_header = data[5]
+                add_header_value = data[6]
                 result_method = data[9]
                 ExpectationResult = data[10]
                 if commom_header == 'yes':
@@ -42,9 +44,26 @@ class RunExcel(unittest.TestCase):
                     if result_method == 'mec':
                         excel_message = ExpectationResultMoed.get_excel_message(ExpectationResult,url,code_stutas)
                         if message == excel_message:
-                            excel_data.excel_wirte_data(i+2,12,'测试通过')
+                            excel_data.excel_wirte_data(i+2,12,str(res))
+                            excel_data.excel_wirte_data(i + 2, 13, 'pass')
                         else:
-                            excel_data.excel_wirte_data(i+2,12, '测试失败')
+                            excel_data.excel_wirte_data(i+2,12,str(res))
+                            excel_data.excel_wirte_data(i + 2, 12, 'fail')
+                if commom_header == 'add_to':
+                    commom_header = ath.add_to_header(json.loads(add_header_value))
+                    res = BaseRequest.run_main(method, url, header=commom_header)
+                    code_stutas = res['code']
+                    message = res['message']
+                    if result_method == 'mec':
+                        excel_message = ExpectationResultMoed.get_excel_message(ExpectationResult,url,code_stutas)
+                        if message == excel_message:
+                            excel_data.excel_wirte_data(i+2,12,str(res))
+                            excel_data.excel_wirte_data(i + 2, 13, 'pass')
+                        else:
+                            excel_data.excel_wirte_data(i+2,12,str(res))
+                            excel_data.excel_wirte_data(i + 2, 12, 'fail')
+
+
 
 
 
