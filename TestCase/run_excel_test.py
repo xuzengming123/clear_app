@@ -4,7 +4,6 @@ import requests
 import unittest,time
 from HTMLTestRunner import HTMLTestRunner
 from Until.handle_excel import excel_data
-from BeautifulReport.BeautifulReport import BeautifulReport
 from Config.header import headers
 from Until.handle_ini import handle_init
 from Until.handle_common import common
@@ -32,15 +31,23 @@ class RunExcel(unittest.TestCase):
             if is_run == 'yes':
                 url = data[3]
                 method = data[4]
-                commom_header = data[5]
-                add_header_value = data[6]
-                result_method = data[9]
-                ExpectationResult = data[10]
+                commom_header = data[5]   #公共header
+                add_header_value = data[6]  #接口独有header字段
+                body1 = data[7]       #data
+                body1_is_must = data[8]    #data是否必传
+                result_method = data[9]     #预期结果方式
+                ExpectationResult = data[10]   #预期结果
+                #公共header是否追加或者不追加
                 if commom_header == 'yes':
                     commom_header = headers
-                    res = BaseRequest.run_main(method,url,header=commom_header)
+                    if body1 == 'no':
+                        data = None
+                    else:
+                        data = json.loads(body1)
+                    res = BaseRequest.run_main(method,url,data=data,header=commom_header)
                     code_stutas = res['code']
                     message = res['message']
+                    #预期结果方式
                     if result_method == 'mec':
                         excel_message = ExpectationResultMoed.get_excel_message(ExpectationResult,url,code_stutas)
                         if message == excel_message:
@@ -49,11 +56,31 @@ class RunExcel(unittest.TestCase):
                         else:
                             excel_data.excel_wirte_data(i+2,12,str(res))
                             excel_data.excel_wirte_data(i + 2, 12, 'fail')
+                    if result_method == 'json':
+                        if code_stutas == '200':
+                            status_str = 'sucess'
+                        else:
+                            status_str = 'error'
+                        # 通过excel文件获取预期结果
+                        excel_result = ExpectationResultMoed.get_excel_message(ExpectationResult, url, status_str)
+                        # 开始校验结果
+                        result = ExpectationResultMoed.handle_result_json(excel_result,res)
+                        if result:
+                            excel_data.excel_wirte_data(i + 2, 12, str(res))
+                            excel_data.excel_wirte_data(i + 2, 13, 'pass')
+                        else:
+                            excel_data.excel_wirte_data(i + 2, 12, str(res))
+                            excel_data.excel_wirte_data(i + 2, 13, 'fail')
+
                 if commom_header == 'add_to':
                     commom_header = ath.add_to_header(json.loads(add_header_value))
-                    res = BaseRequest.run_main(method, url, header=commom_header)
+                    if body1 == 'no':
+                        data = None
+                    else:
+                        data = json.loads(body1)
+                    res = BaseRequest.run_main(method,url,data=data,header=commom_header)
                     code_stutas = res['code']
-                    if res['msg'] != '请求成功':
+                    if 'msg' in res:
                         msg = res['msg']
                         if result_method == 'mec':
                             excel_message = ExpectationResultMoed.get_excel_message(ExpectationResult,url,code_stutas)
@@ -62,6 +89,21 @@ class RunExcel(unittest.TestCase):
                                 excel_data.excel_wirte_data(i + 2, 13, 'pass')
                             else:
                                 excel_data.excel_wirte_data(i+2,12,str(res))
+                                excel_data.excel_wirte_data(i + 2, 13, 'fail')
+                        if result_method == 'json':
+                            if code_stutas == '200':
+                                status_str = 'sucess'
+                            else:
+                                status_str = 'error'
+                            # 通过excel文件获取预期结果
+                            excel_result = ExpectationResultMoed.get_excel_message(ExpectationResult, url, status_str)
+                            # 开始校验结果
+                            result = ExpectationResultMoed.handle_result_json(excel_result, res)
+                            if result:
+                                excel_data.excel_wirte_data(i + 2, 12, str(res))
+                                excel_data.excel_wirte_data(i + 2, 13, 'pass')
+                            else:
+                                excel_data.excel_wirte_data(i + 2, 12, str(res))
                                 excel_data.excel_wirte_data(i + 2, 13, 'fail')
                     else:
                         message = res['message']
@@ -72,6 +114,21 @@ class RunExcel(unittest.TestCase):
                                 excel_data.excel_wirte_data(i + 2, 13, 'pass')
                             else:
                                 excel_data.excel_wirte_data(i+2,12,str(res))
+                                excel_data.excel_wirte_data(i + 2, 13, 'fail')
+                        if result_method == 'json':
+                            if code_stutas == '200':
+                                status_str = 'sucess'
+                            else:
+                                status_str = 'error'
+                            # 通过excel文件获取预期结果
+                            excel_result = ExpectationResultMoed.get_excel_message(ExpectationResult,url,status_str)
+                            # 开始校验结果
+                            result = ExpectationResultMoed.handle_result_json(excel_result, res)
+                            if result:
+                                excel_data.excel_wirte_data(i + 2, 12, str(res))
+                                excel_data.excel_wirte_data(i + 2, 13, 'pass')
+                            else:
+                                excel_data.excel_wirte_data(i + 2, 12, str(res))
                                 excel_data.excel_wirte_data(i + 2, 13, 'fail')
 
 
