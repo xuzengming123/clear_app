@@ -1,36 +1,35 @@
 import os,sys,json
+from deepdiff import DeepDiff
 
 class ExpectationResultMoed:
-    @classmethod
-    def get_excel_message(cls,message_data,url,code_status):
-        '''
-        从Excel文件中获取code对应的message信息
-        :param url:
-        :param code_status:
-        :param message_data:
-        :param key:
-        :param code:
-        :return:
-        '''
-        message_data = json.loads(message_data)
-        message_list = message_data.get(url)
-        if message_list is not None:
-            for i in message_list:
-                mes = i.get(str(code_status))
-                if mes:
-                    return mes
-        return None
+    # @classmethod
+    # def (cls,message_data,url,code_status):
+    #     """
+    #     从Excel文件中获取code对应的message信息
+    #     :param url:
+    #     :param code_status:
+    #     :param message_data:
+    #     :return:
+    #     """
+    #     message_data = json.loads(message_data)
+    #     message_list = message_data.get(url)
+    #     if message_list is not None:
+    #         for i in message_list:
+    #             mes = i.get(str(code_status))
+    #             if mes:
+    #                 return mes
+    #     return None
 
 
     @classmethod
-    def get_result_from_excel(cls,messageData,url,status):
-        '''
+    def get_excel_message(cls,messageData,url,status):
+        """
         从excel中获取预期结果。
         :param messageData: 接口数据
         :param url: 接口名
         :param status: 返回的状态
         :return:
-        '''
+        """
         message_data = json.loads(messageData)
         if messageData:
             message_list = message_data.get(url)
@@ -41,6 +40,24 @@ class ExpectationResultMoed:
                         return mes
             return None
         return '该单元格没有数据'
+
+    @classmethod
+    def handle_result_json(cls,d1,d2):
+        """
+        校验格式，对比d1,d2两个对象，相等返回True，否则返回False
+        :param d1:
+        :param d2:
+        :return:
+        """
+        if isinstance(d1,dict) and isinstance(d2,dict):
+            cmp_dict = DeepDiff(d1,d2,ignore_order=True).to_dict()
+            if cmp_dict.get('dictionary_item_added'):
+                return False
+            else:
+                return True
+        return False
+
+
 er = ExpectationResultMoed()
 
 if __name__ == '__main__':
