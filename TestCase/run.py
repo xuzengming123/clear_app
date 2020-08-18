@@ -1,6 +1,7 @@
 import json
 import pprint
 import requests
+import threading
 import unittest,time
 from HTMLTestRunner import HTMLTestRunner
 from Until.handle_excel import excel_data
@@ -39,13 +40,13 @@ class runmain(unittest.TestCase):
     def test_getAwardMsg(self):
         """今日客户获奖金币与刮奖次数"""
         res = BaseRequest.run_main('get',getAwardMsg_url,header=headers)
-        self.assertEqual(res['code'],'200',msg='%s'%res['msg'])
+        self.assertEqual(res['code'],'200',msg='%s'%res['message'])
 
 
     def test_areaOneOperation(self):
         """区域1刮奖专用"""
         res = BaseRequest.run_main('get',areaOneOperation_url,data={"id":8},header=headers)
-        self.assertEqual(res['code'],'200',msg='%s'%res['msg'])
+        self.assertEqual(res['code'],'200',msg='%s'%res['message'])
 
     def test_areaTwoOperation(self):
         """区域2刮奖专用"""
