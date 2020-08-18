@@ -104,3 +104,21 @@ logging.info('info')
 logging.warning('warning')
 logging.error('error')
 logging.critical('critical')
+
+class ClassTest:
+    def __new__(cls, *args, **kwargs):
+        return object.__new__(cls)
+
+    def __init__(self, _list=None, _dict=None):
+        ''' 初始化操作 '''
+        if _dict is None:
+            _dict = {"a": 1, "b": 2}
+        if _list is None:
+            _list = ["1", "2", "3", "4", "5"]
+        self._list = _list
+        self._dict = _dict
+    def __repr__(self):
+        return repr(self._dict)
+
+if __name__ == '__main__':
+    print(repr(ClassTest()))
