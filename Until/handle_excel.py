@@ -1,8 +1,7 @@
 #coding=utf-8
 
 import openpyxl
-import sys,os,json
-from Until.handle_ini import handle_init
+import os
 
 CasePath = os.path.abspath('../Case/')
 

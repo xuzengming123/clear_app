@@ -1,13 +1,7 @@
-import json
-import pprint
-import requests
-import threading
-import unittest,time
+
+import unittest
 from HTMLTestRunner import HTMLTestRunner
-from Until.handle_excel import excel_data
-from BeautifulReport.BeautifulReport import BeautifulReport
-from Config.header import headers
-from Until.handle_ini import handle_init
+
 from Until.handle_common import common
 from Until.handle_request import *
 from Config.url_path import *
